@@ -66,7 +66,7 @@ func solution2(f io.Reader) string {
 	res := 0
 GLOB:
 	for {
-		var lines [3][]byte
+		seenCount := map[byte]int{}
 		for i := 0; i < 3; i++ {
 			line, _, err := r.ReadLine()
 			if err != nil {
@@ -74,23 +74,17 @@ GLOB:
 
 				break GLOB
 			}
-			lines[i] = line
-		}
 
-		seenCount := map[byte]int{}
-		for _, line := range lines {
 			isSeenInLine := map[byte]bool{}
 			for _, a := range line {
 				if !isSeenInLine[a] {
 					seenCount[a]++
 					isSeenInLine[a] = true
-				}
-			}
-		}
 
-		for item, count := range seenCount {
-			if count == 3 {
-				res += getItemPoint(item)
+					if seenCount[a] == 3 {
+						res += getItemPoint(a)
+					}
+				}
 			}
 		}
 	}
