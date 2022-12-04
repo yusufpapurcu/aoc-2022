@@ -30,26 +30,19 @@ func solution1(f io.Reader) string {
 	r := bufio.NewReader(f)
 	res := 0
 	for {
-		line, _, err := r.ReadLine()
+		lineRaw, _, err := r.ReadLine()
 		if err != nil {
 			log.Println(err)
 
 			break
 		}
-		fields := strings.Split(string(line), ",")
-		p1 := strings.Split(fields[0], "-")
-		p2 := strings.Split(fields[1], "-")
-		p1a1 := convertInt(p1[0])
-		p1a2 := convertInt(p1[1])
-		p2a1 := convertInt(p2[0])
-		p2a2 := convertInt(p2[1])
+		fields := strings.Fields(strings.Replace(strings.Replace(string(lineRaw), "-", " ", -1), ",", " ", -1))
+		nums := convertInt(fields)
 
-		front := p1a1 - p2a1
-		back := p1a2 - p2a2
+		front := nums[0] - nums[2]
+		back := nums[1] - nums[3]
 
-		if front >= 0 && back <= 0 {
-			res++
-		} else if front <= 0 && back >= 0 {
+		if (front >= 0 && back <= 0) || (front <= 0 && back >= 0) {
 			res++
 		}
 	}
@@ -60,42 +53,28 @@ func solution2(f io.Reader) string {
 	r := bufio.NewReader(f)
 	res := 0
 	for {
-		line, _, err := r.ReadLine()
+		lineRaw, _, err := r.ReadLine()
 		if err != nil {
 			log.Println(err)
 
 			break
 		}
-		fields := strings.Split(string(line), ",")
-		p1 := strings.Split(fields[0], "-")
-		p2 := strings.Split(fields[1], "-")
-		p1a1 := convertInt(p1[0])
-		p1a2 := convertInt(p1[1])
-		p2a1 := convertInt(p2[0])
-		p2a2 := convertInt(p2[1])
+		fields := strings.Fields(strings.Replace(strings.Replace(string(lineRaw), "-", " ", -1), ",", " ", -1))
+		nums := convertInt(fields)
 
-		if p1a2-p2a1 >= 0 {
-			if p1a1-p2a2 <= 0 {
-				res++
-			}
+		if nums[1]-nums[2] >= 0 && nums[0]-nums[3] <= 0 {
+			res++
 		}
-
-		// .....67..  6-7
-		// ...45....  4-5
-
-		// front := p1a1 - p2a1
-		// back := p1a2 - p2a2
-
-		// if front >= 0 && back <= 0 {
-		// 	res++
-		// } else if front <= 0 && back >= 0 {
-		// 	res++
-		// }
 	}
 	return fmt.Sprint(res)
 }
 
-func convertInt(a string) int {
-	res, _ := strconv.Atoi(a)
-	return res
+func convertInt(a []string) [4]int {
+	var nums [4]int
+	nums[0], _ = strconv.Atoi(a[0])
+	nums[1], _ = strconv.Atoi(a[1])
+	nums[2], _ = strconv.Atoi(a[2])
+	nums[3], _ = strconv.Atoi(a[3])
+
+	return nums
 }
